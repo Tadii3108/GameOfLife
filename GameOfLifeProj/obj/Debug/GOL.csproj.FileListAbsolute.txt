@@ -1,0 +1,13 @@
+C:\Users\vanes\Downloads\GOL-master\GOL-master\Class1_Intro\obj\Debug\GOL.csproj.AssemblyReference.cache
+C:\Users\vanes\Source\Repos\ConwaysGameOfLife\Class1_Intro\obj\Debug\GOL.csproj.AssemblyReference.cache
+C:\Users\vanes\Downloads\GOL-master\GOL-master\Class1_Intro\bin\Debug\Class1_Intro.exe.config
+C:\Users\vanes\Downloads\GOL-master\GOL-master\Class1_Intro\bin\Debug\Class1_Intro.exe
+C:\Users\vanes\Downloads\GOL-master\GOL-master\Class1_Intro\bin\Debug\Class1_Intro.pdb
+C:\Users\vanes\Downloads\GOL-master\GOL-master\Class1_Intro\obj\Debug\Class1_Intro.Form1.resources
+C:\Users\vanes\Downloads\GOL-master\GOL-master\Class1_Intro\obj\Debug\Class1_Intro.GetSeedForRand.resources
+C:\Users\vanes\Downloads\GOL-master\GOL-master\Class1_Intro\obj\Debug\Class1_Intro.Properties.Resources.resources
+C:\Users\vanes\Downloads\GOL-master\GOL-master\Class1_Intro\obj\Debug\Class1_Intro.Settings.resources
+C:\Users\vanes\Downloads\GOL-master\GOL-master\Class1_Intro\obj\Debug\GOL.csproj.GenerateResource.cache
+C:\Users\vanes\Downloads\GOL-master\GOL-master\Class1_Intro\obj\Debug\GOL.csproj.CoreCompileInputs.cache
+C:\Users\vanes\Downloads\GOL-master\GOL-master\Class1_Intro\obj\Debug\Class1_Intro.exe
+C:\Users\vanes\Downloads\GOL-master\GOL-master\Class1_Intro\obj\Debug\Class1_Intro.pdb
