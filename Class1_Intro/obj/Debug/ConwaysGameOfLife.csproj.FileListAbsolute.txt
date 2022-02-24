@@ -1,0 +1,12 @@
+C:\Users\vanes\source\repos\ConwaysGameOfLife\Class1_Intro\bin\Debug\Class1_Intro.exe.config
+C:\Users\vanes\source\repos\ConwaysGameOfLife\Class1_Intro\bin\Debug\Class1_Intro.exe
+C:\Users\vanes\source\repos\ConwaysGameOfLife\Class1_Intro\bin\Debug\Class1_Intro.pdb
+C:\Users\vanes\source\repos\ConwaysGameOfLife\Class1_Intro\obj\Debug\Class1_Intro.Form1.resources
+C:\Users\vanes\source\repos\ConwaysGameOfLife\Class1_Intro\obj\Debug\Class1_Intro.GetSeedForRand.resources
+C:\Users\vanes\source\repos\ConwaysGameOfLife\Class1_Intro\obj\Debug\Class1_Intro.Properties.Resources.resources
+C:\Users\vanes\source\repos\ConwaysGameOfLife\Class1_Intro\obj\Debug\Class1_Intro.Settings.resources
+C:\Users\vanes\source\repos\ConwaysGameOfLife\Class1_Intro\obj\Debug\ConwaysGameOfLife.csproj.GenerateResource.cache
+C:\Users\vanes\source\repos\ConwaysGameOfLife\Class1_Intro\obj\Debug\ConwaysGameOfLife.csproj.CoreCompileInputs.cache
+C:\Users\vanes\source\repos\ConwaysGameOfLife\Class1_Intro\obj\Debug\Class1_Intro.exe
+C:\Users\vanes\source\repos\ConwaysGameOfLife\Class1_Intro\obj\Debug\Class1_Intro.pdb
+C:\Users\vanes\source\repos\ConwaysGameOfLife\Class1_Intro\obj\Debug\ConwaysGameOfLife.csproj.AssemblyReference.cache

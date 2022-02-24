@@ -7,58 +7,90 @@ using System.Collections.Generic;
 
 namespace Class1_Intro
 { 
-    //The Universe
+    // The Universe
     public partial class Form1 : Form
-    {   
-        
-        // The universe array
-        bool[,] universe = new bool[20, 20]; 
-        bool[,] Pad = new bool[20, 20];
-        bool[,] temp = new bool[20, 20];
-        // Drawing colors
-        Color gridColor = Color.Black;
-        Color cellColor = Color.Cyan;
-        Color deadcellC = Color.White;
-        // The Timer class
+    {         
+        // universe[]
+        bool[,] universe = new bool[30, 20]; 
+        bool[,] Pad = new bool[30, 20];
+        bool[,] temp = new bool[30, 20];
+
+        // colors
+        Color gridColor = Color.White;
+        Color cellColor = Color.White;
+        Color deadcellC = Color.Black;
+
+        // timer
         Timer timer = new Timer(); 
    
-        // Generation count
+        // gen count
         int generations = 0;
-        int LivingCells = 0; 
-        //forms
+        int aliveCells = 0; 
+
+        // forms
         GetSeedForRand dudex = new GetSeedForRand();
         Settings option = new Settings(); 
-        //Ini 
+
+        // initial 
         public bool[,] Universe { get => universe; set => universe = value; }
 
+        #region Form1
         public Form1()
-        {
-            
+        {        
             InitializeComponent();
-            //For security I ini the Color in the option Menu// in case the user do not select any color
+
             option.OneColor = gridColor;
             option.SecondColor = deadcellC;
             option.OneMoreColor = cellColor;
-            //universe[1, 1] = true;
 
-            // Init Timer 
+            // inital timer 
             timer.Tick += Timer_Tick;
-            timer.Interval = 20;
+            timer.Interval = 50;
             option.interval = timer.Interval;
-           // option.interval = timer.Interval;
-            CellsAlive.Text = "Living Cells: " + LivingCells.ToString();
-
-           
-           
-
+            CellsAlive.Text = "Living Cells: " + aliveCells.ToString();
         }
-        //timer
+        #endregion
+
+        #region Timer
         private void Timer_Tick(object sender, EventArgs e)
         {
             NextGeneration();
-            countlivingcells();
+            countAliveCells();
         }
-        //Next Generation function
+        #endregion
+
+        #region Counting Neighbors
+        private int countNeighbor( int a, int b)
+        {
+            int ans = 0;
+
+            for (int i = -1; i < 2; i++)
+            {
+                // iterate through the universe left to right (x axis)
+                for (int j = -1; j < 2; j++)
+                {
+                    int col = (b + i + universe.GetLength(1)) % universe.GetLength(1);
+
+                    int row = (a + j + universe.GetLength(0)) % universe.GetLength(0);
+
+                    if (universe[row, col] == true)
+                    {
+                        ans++;
+                    }
+                }
+
+            }
+
+            if (universe[a, b])
+            {
+                ans--;
+            }
+
+            return ans;
+        }
+        #endregion
+
+        #region Next Generation
         private void NextGeneration()
         {
             temp = universe;
@@ -68,7 +100,6 @@ namespace Class1_Intro
                 for (int x = 0; x < universe.GetLength(0); x++)
                 {
                     var state = universe[x, y];
-
 
                     int neighbors = countNeighbor(x, y);
 
@@ -88,79 +119,45 @@ namespace Class1_Intro
             }
 
             universe = Pad;
-
             Pad = temp;
-
             generations++;
-
             toolStripStatusLabelGerenations.Text = "Generations = " + generations.ToString();
-
-        
 
             graphicsPanel1.Invalidate();
         }
-        //CountNeighbor Functions
-        private int countNeighbor( int x, int y)
+        #endregion
+        private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            int sum = 0;
-
-            for (int i = -1; i < 2; i++)
-            {
-                // Iterate through the universe in the x, left to right
-                for (int j = -1; j < 2; j++)
-                {
-                    //let col = (x + i + cols) % cols;
-                    //let row = (y + j + rows) % rows;
-                    //sum += grid[col][row];
-
-                    int col = (y + i + universe.GetLength(1)) % universe.GetLength(1);
-
-                    int row = (x + j + universe.GetLength(0)) % universe.GetLength(0);
-
-                    if (universe[row, col] == true)
-                    {
-                        sum++;
-                    }
-                }
-
-            }
-
-            if (universe[x, y])
-            {
-                sum--;
-            }
-
-           // graphicsPanel1.Invalidate();
-
-
-            return sum;
+            NextGeneration();
+            graphicsPanel1.Invalidate();
         }
-        //Graphic Tools
+
+        #region Graphic Tools
+        // graphic tools
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
         {
-            // USE FLOATS!
+            // floats!?
             Font font = new Font("Arial", 10f);
 
             StringFormat stringFormat = new StringFormat();
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
-
            
             // The width and height of each cell in pixels
             int cellWidth = graphicsPanel1.ClientSize.Width / universe.GetLength(0);
             int cellHeight = graphicsPanel1.ClientSize.Height / universe.GetLength(1);
 
             // A Pen for drawing the grid lines (color, width)
-           Pen gridPen = new Pen(gridColor, 1);  
-
+            Pen gridPen = new Pen(gridColor, 1);  
 
             // Brush
             Brush cellBrush = new SolidBrush(cellColor);
             Brush DeadCellBrush = new SolidBrush(deadcellC);
-            // Iterate through the universe in the y, top to bottom
+
+            // iterate through the universe top to bottom (y axis)
             for (int y = 0; y < universe.GetLength(1); y++)
             {
-                // Iterate through the universe in the x, left to right
+                // iterate through the universe left to right
                 for (int x = 0; x < universe.GetLength(0); x++)
                 {
                     // A rectangle to represent each cell in pixels
@@ -181,52 +178,42 @@ namespace Class1_Intro
                         e.Graphics.FillRectangle(DeadCellBrush, cellRect);
                     } 
 
-
-                    
-
                     e.Graphics.DrawString(countNeighbor(x, y).ToString(), font, Brushes.Black, cellRect, stringFormat);
-
-                    // e.Graphics.DrawString(countNeighbor( x, y).ToString(), font, Brushes.Black, cellRect, stringFormat);
 
                     // Outline the cell with a pen
                     e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
                 }
             }
 
-            // Cleaning up pens and brushes
             gridPen.Dispose();
-            cellBrush.Dispose();
-            
-
+            cellBrush.Dispose();           
         }
 
-        //Graphic Tools
         private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                // USE FLOATS!
-
+                // floats!?
                 // The width and height of each cell in pixels
                 int cellWidth = graphicsPanel1.ClientSize.Width / universe.GetLength(0);
                 int cellHeight = graphicsPanel1.ClientSize.Height / universe.GetLength(1);
 
+                int i = e.X / cellWidth;
+                int j = e.Y / cellHeight;
 
-                int x = e.X / cellWidth;
-                int y = e.Y / cellHeight;
-
-                universe[x, y] = !universe[x, y];
-
-                countlivingcells();
+                universe[i, j] = !universe[i, j];
+                countAliveCells();
 
                 graphicsPanel1.Invalidate();
             }
         }
-        //this function is to Reset the Universe
+        #endregion
+
+        #region Universe Reset
+        // this function is to Reset the Universe
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // In case the Timer is On... 
-
+            // In case the Timer is On 
             timer.Enabled = false;
 
             // Iterate through the universe in the y, top to bottom
@@ -239,43 +226,42 @@ namespace Class1_Intro
                 }
             }
 
-            // set Generations To 0 and Living Cells
+            // generation ands alive cells set to 0
             generations = 0;
-            LivingCells = 0;
+            aliveCells = 0;
             toolStripStatusLabelGerenations.Text = "Generations = " + generations.ToString();
-            CellsAlive.Text = "Living Cells: " + LivingCells.ToString();
+            CellsAlive.Text = "Living Cells: " + aliveCells.ToString();
             graphicsPanel1.Invalidate();
         }
-        //Next Generation Bott
-        private void toolStripButton3_Click(object sender, EventArgs e)
-        {
-            NextGeneration();
-            graphicsPanel1.Invalidate();
-        }
-        //PlayB
+        #endregion
+
+        #region Play Button
         private void PlayB_Click(object sender, EventArgs e)
         {
-
             timer.Enabled = true;
         }
-        //StopB
+        #endregion
+
+        #region Stop Button
         private void Stop_Timer_Click(object sender, EventArgs e)
         {
             timer.Enabled = false;
         }
-        //Random
+        #endregion
+
+        #region Random function
         private void basicRandomToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int actual_state;
+            int state;
             Random dude = new Random();
             for (int y = 0; y < universe.GetLength(1); y++)
             {
                 for (int x = 0; x < universe.GetLength(0); x++)
                 {
 
-                    actual_state = dude.Next(0, 2);
+                    state = dude.Next(0, 2);
 
-                    if (actual_state == 0)
+                    if (state == 0)
                     {
                         universe[x, y] = false;
                     }
@@ -285,16 +271,18 @@ namespace Class1_Intro
                     }
                 }
             }
-            countlivingcells();
+            countAliveCells();
             graphicsPanel1.Invalidate();
         }
-        //Random Dialog
+        #endregion
+
+        #region Random Dialog
         private void seedRandomToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if(dudex.ShowDialog() == DialogResult.OK)
 
             {
-                int actual_state;
+                int state;
                 Random dude = new Random(dudex.myVar); 
 
                 for (int y = 0; y < universe.GetLength(1); y++)
@@ -302,9 +290,9 @@ namespace Class1_Intro
                     for (int x = 0; x < universe.GetLength(0); x++)
                     {
 
-                        actual_state = dude.Next(0, 2);
+                        state = dude.Next(0, 2);
 
-                        if (actual_state == 0)
+                        if (state == 0)
                         {
                             universe[x, y] = false;
                         }
@@ -315,7 +303,7 @@ namespace Class1_Intro
                     }
                 }
 
-                countlivingcells();
+                countAliveCells();
                 graphicsPanel1.Invalidate();
 
             }
@@ -325,37 +313,26 @@ namespace Class1_Intro
             }
 
         }
-        //Save the file
+        #endregion
+
+        #region Saving the file
         private void saveToolStripButton_Click(object sender, EventArgs e)
         {
             int x = 0;
-            int y = 0;
-           
+            int y = 0;         
 
-            //For Saving The Universe
             SaveFileDialog saveFileDialog1 = new SaveFileDialog(); 
-
             saveFileDialog1.DefaultExt = "cells";
-
-            saveFileDialog1.Title = "Saving The Universe."; 
-            
-            saveFileDialog1.Filter = "Cells and texts Files (*.txt),(*.cells)|*.txt,*.cells|All files (*.*)|*.*";
-
-           // saveFileDialog1.CheckFileExists = true;
-
-            //saveFileDialog1.CheckPathExists = true;
-
+            saveFileDialog1.Title = "Saving the universe.";          
+            saveFileDialog1.Filter = "Cells and texts files (*.txt),(*.cells)|*.txt,*.cells|All files (*.*)|*.*";
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                // Saves the Image via a FileStream created by the OpenFile method.  
-
+                // saves the image via a FileStream created by the OpenFile method 
                 StreamWriter sw = new StreamWriter(saveFileDialog1.FileName);
 
                 sw.WriteLine("!Name: " + Path.GetFileNameWithoutExtension(saveFileDialog1.FileName));
                 sw.WriteLine("!");
-
-                //Pass Thr all the Universe and check for cells' status
 
                 for ( y = 0; y < universe.GetLength(1); y++)
                     {
@@ -363,15 +340,10 @@ namespace Class1_Intro
                     if (y > 0)
                     {
                         sw.WriteLine();
-                    }
-             
-                    
+                    }                 
 
                     for ( x = 0; x < universe.GetLength(0); x++)
                     {
-
-                        
-
                         if (universe[x, y] == false)
                         {
                             sw.Write(".");
@@ -382,24 +354,22 @@ namespace Class1_Intro
                             sw.Write("O");
                         }
                     }
-
                     }
 
                 // Saves the Image in the appropriate ImageFormat based upon the  
                 // File type selected in the dialog box.  
                 // NOTE that the FilterIndex property is one-based.   
 
-
-
-                sw.Close();
-                        
+                sw.Close();                   
             }
 
         }
-        //Check Living cells
-        void countlivingcells()
+        #endregion
+
+        #region Counting the living cells
+        void countAliveCells()
         {
-            LivingCells = 0; 
+            aliveCells = 0; 
 
             for (int y = 0; y < universe.GetLength(1); y++)
             {
@@ -408,80 +378,60 @@ namespace Class1_Intro
 
                     if (universe[x,y] == true)
                     {
-                        LivingCells++;
+                        aliveCells++;
                     } 
-                 
-                 
-
                 }
             }
 
-            CellsAlive.Text = "Living Cells: " + LivingCells.ToString();
+            CellsAlive.Text = "Living Cells: " + aliveCells.ToString();
         }
-        //Open a file and read and import new Universe
-        private void openToolStripButton_Click(object sender, EventArgs e)
-        {
-           // universe[0, 0] = true;  
+        #endregion
 
+        #region Open a file and read and import new Universe
+        private void openToolStripButton_Click(object sender, EventArgs e)
+        { 
             string line = "";
             int counterY = 0;
             int lineX = 0;
 
-            //For Saving The Universe
+            // saving the universe
             OpenFileDialog openfile = new OpenFileDialog();
 
             openfile.DefaultExt = "cells";
-
-           openfile.Title = "Opening the Universe.";
-
+            openfile.Title = "Entering the Universe.";
             openfile.Filter = "cells files (*.cells)|*.cells|Text Files (*.txt)|*.txt|All files (*.*)|*.*";
-
             openfile.CheckPathExists = true;
-
 
             if (openfile.ShowDialog() == DialogResult.OK)
             {
-
-                // Saves the Image via a FileStream created by the OpenFile method.   
+                // saves the image via a FileStream created by the OpenFile method.   
                 Stream s = new MemoryStream();
                 StreamReader sr = new StreamReader(openfile.FileName); 
-                
-                
+                              
                 while ((line = sr.ReadLine()) != null)
                 {
                     if (line[0] == '!')
                     {
                         continue;
                     }
-
                     else if (line[1] == '!')
                     {
                         continue;
                     }
-
                     lineX = line.Length;
-             
-
                     counterY++;
                 }
 
-
                 sr.Close();
 
-                //Resize The Universe 
-
+                // resize the universe 
                 universe = new bool[lineX, counterY];
-                 Pad = new bool[lineX, counterY];
-                 //temp = new bool[lineX, counterY] ;
-
+                Pad = new bool[lineX, counterY];
 
                 lineX--;
                 counterY = 0;
 
-
                 StreamReader st = new StreamReader(openfile.FileName);
-
-                //   StreamReader st = new StreamReader(openfile.FileName);
 
                 while ((line = st.ReadLine()) != null)
                 {
@@ -489,8 +439,7 @@ namespace Class1_Intro
                     {
                         continue;
                     }
-       
-                        
+                            
                     for (int x = 0; x < lineX; x++)
                     {
 
@@ -505,46 +454,36 @@ namespace Class1_Intro
                         }
 
                     }
-
-                    counterY++;
-
-                
-                   
+                    counterY++;                               
                 }
                 st.Close();
-
             }
-
-            countlivingcells();
+            countAliveCells();
             graphicsPanel1.Invalidate();
         }
-        //option Menu
+        #endregion
+
+        #region Option Menu
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             if (option.ShowDialog() == DialogResult.OK)
-            {        
-               // timer.Interval = option.interval; 
-
-               //Updating the colors
+            {         
+                // updating colors
                 gridColor = option.OneColor;
                 deadcellC = option.SecondColor;
                 cellColor = option.OneMoreColor;
-                //Updating the Interval
+
+                // updating interval
                 timer.Interval = option.interval;
-                //updating the Universe Size
+
+                // updating universe size
                 universe = new bool[option.X, option.Y];
                 Pad = new bool[option.X, option.Y];
                 temp = new bool[option.X, option.Y];
-
             }
             graphicsPanel1.Invalidate();
         }
-        //
-        private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-           // gridView.CheckOnClick;
+        #endregion
 
-        }
     }
 }
